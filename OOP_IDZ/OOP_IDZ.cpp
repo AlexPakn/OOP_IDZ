@@ -28,6 +28,41 @@ public:
         delete[] data;
     }
 
+    class iterator {
+    private:
+        T* ptr; // Указатель на текущий элемент
+
+    public:
+        // Конструктор инициализирует указатель
+        iterator(T* p) : ptr(p) {}
+
+        // Оператор разыменования для доступа к элементу
+        T& operator*() {
+            return *ptr;
+        }
+
+        // Префиксный инкремент для перехода к следующему элементу
+        iterator& operator++() {
+            ++ptr;
+            return *this;
+        }
+
+        // Оператор сравнения для проверки неравенства итераторов
+        bool operator!=(const iterator& other) const {
+            return ptr != other.ptr;
+        }
+    };
+
+    // Возвращает итератор на начало контейнера
+    iterator begin() {
+        return iterator(data);
+    }
+
+    // Возвращает итератор на конец контейнера
+    iterator end() {
+        return iterator(data + size);
+    }
+
     // Добавление нового элемента
     void push_back(const T& value) {
         if (size == capacity) {
@@ -154,6 +189,12 @@ int main()
     tv.push_back(3);
     tv.push_back(8);
     tv.push_back(1);
+
+    cout << "Массив после добавления элементов (используя итератор) : ";
+    for (auto itr = tv.begin(); itr != tv.end(); ++itr) {
+        cout << *itr << " ";
+    }
+    cout << endl;
 
     cout << "Массив после добавления элементов: ";
     for (size_t i = 0; i < tv.get_size(); ++i) {
