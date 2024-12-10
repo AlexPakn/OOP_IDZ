@@ -4,11 +4,11 @@ using namespace std;
 template <typename T>
 class tvector {
 private:
-    T* data;          // Указатель на динамический массив
-    size_t size;      // Текущий размер массива
-    size_t capacity;  // Текущая емкость массива
+    T* data;          // Вказівник на динамічний масив
+    size_t size;      // Поточний розмір масиву
+    size_t capacity;  // Поточна ємність масиву
 
-    // Метод для изменения емкости массива
+    // Метод для зміни ємності масиву
     void resize(size_t new_capacity) {
         T* new_data = new T[new_capacity];
         for (size_t i = 0; i < size; ++i) {
@@ -20,7 +20,7 @@ private:
     }
 
 public:
-    // Конструктор по умолчанию
+    // Конструктор за замовчуванням
     tvector() : data(nullptr), size(0), capacity(0) {}
 
     // Деструктор
@@ -30,40 +30,40 @@ public:
 
     class iterator {
     private:
-        T* ptr; // Указатель на текущий элемент
+        T* ptr; // Вказівник на поточний елемент
 
     public:
-        // Конструктор инициализирует указатель
+        // Конструктор ініціалізує вказівник
         iterator(T* p) : ptr(p) {}
 
-        // Оператор разыменования для доступа к элементу
+        // Оператор розіменування для доступу до елемента
         T& operator*() {
             return *ptr;
         }
 
-        // Префиксный инкремент для перехода к следующему элементу
+        // Префіксний інкремент для переходу до наступного елемента
         iterator& operator++() {
             ++ptr;
             return *this;
         }
 
-        // Оператор сравнения для проверки неравенства итераторов
+        // Оператор порівняння для перевірки нерівності ітераторів
         bool operator!=(const iterator& other) const {
             return ptr != other.ptr;
         }
     };
 
-    // Возвращает итератор на начало контейнера
+    // Повертає ітератор на початок контейнера
     iterator begin() {
         return iterator(data);
     }
 
-    // Возвращает итератор на конец контейнера
+    // Повертає ітератор на кінець контейнера
     iterator end() {
         return iterator(data + size);
     }
 
-    // Добавление нового элемента
+    // Додавання нового елемента
     void push_back(const T& value) {
         if (size == capacity) {
             resize(capacity == 0 ? 1 : capacity * 2);
@@ -71,10 +71,10 @@ public:
         data[size++] = value;
     }
 
-    // Удаление элемента по индексу
+    // Видалення елемента за індексом
     void remove_at(size_t index) {
         if (index >= size) {
-            cout << "Error: Index out of range." << endl;
+            cout << "Помилка: Індекс виходить за межі." << endl;
             return;
         }
         for (size_t i = index; i < size - 1; ++i) {
@@ -83,78 +83,76 @@ public:
         --size;
     }
 
-    // Поиск элемента
+    // Пошук елемента
     int find(const T& value) const {
         for (size_t i = 0; i < size; ++i) {
             if (data[i] == value) {
                 return static_cast<int>(i);
             }
         }
-        return -1; // Элемент не найден
+        return -1; // Елемент не знайдено
     }
 
-    // Сортировка массива
+    // Сортування масиву
     void sort() {
-        quick_sort(0, static_cast<int>(size - 1)); // Запуск быстрой сортировки для всего массива
+        quick_sort(0, static_cast<int>(size - 1)); // Запуск швидкого сортування для всього масиву
     }
 
     void quick_sort(int low, int high) {
-        if (low < high) { // Проверяем если ли хоть 1 неотсортированный элемент на данном участке массива
-            T pivot = data[high]; // Опорный элемент
-            int i = low - 1;      // Индекс для меньших элементов
+        if (low < high) { // Перевіряємо, чи є хоча б один не відсортований елемент на цій ділянці масиву
+            T pivot = data[high]; // Опорний елемент
+            int i = low - 1;      // Індекс для менших елементів
 
-            // Разбиение массива
+            // Розбиття масиву
             for (int j = low; j < high; ++j) {
                 if (data[j] <= pivot) {
                     ++i;
-                    swap(data[i], data[j]); // Обмен меньших элементов
+                    swap(data[i], data[j]); // Обмін менших елементів
                 }
             }
 
-            swap(data[i + 1], data[high]); // Помещаем pivot на его место
-            int pi = i + 1;                // Индекс опорного элемента
+            swap(data[i + 1], data[high]); // Розміщуємо pivot на своє місце
+            int pi = i + 1;                // Індекс опорного елемента
 
-            // Рекурсивная сортировка левой и правой части
+            // Рекурсивне сортування лівої та правої частини
             quick_sort(low, pi - 1);
             quick_sort(pi + 1, high);
         }
     }
 
-
-
-    // Реверс массива
+    // Реверс масиву
     void reverse() {
         for (size_t i = 0; i < size / 2; ++i) {
             swap(data[i], data[size - i - 1]);
         }
     }
 
-    // Изменение значения по индексу
+    // Зміна значення за індексом
     void set(size_t index, const T& value) {
         if (index >= size) {
-            cout << "Error: Index out of range." << endl;
+            cout << "Помилка: Індекс виходить за межі." << endl;
             return;
         }
         data[index] = value;
     }
 
-    // Получение значения по индексу
+    // Отримання значення за індексом
     T get(size_t index) const {
         if (index >= size) {
-            cout << "Error: Index out of range." << endl;
+            cout << "Помилка: Індекс виходить за межі." << endl;
             return T();
         }
         return data[index];
     }
 
-    // Копирование в обычный массив
+    // Копіювання у звичайний масив
     void copy_to_array(T* array) const {
         for (size_t i = 0; i < size; ++i) {
             array[i] = data[i];
         }
     }
 
-    // Копирование из обычного массива
+    // Копіювання зі звичайного масиву
     void copy_from_array(const T* array, size_t array_size) {
         delete[] data;
         data = new T[array_size];
@@ -164,23 +162,23 @@ public:
         }
     }
 
-    // Получение размера массива
+    // Отримання розміру масиву
     size_t get_size() const {
         return size;
     }
 
-    // Перегрузка оператора [] для доступа к элементам
+    // Перевантаження оператора [] для доступу до елементів
     T& operator[](size_t index) {
         if (index >= size) {
-            cout << "Error: Index out of range." << endl;
+            cout << "Помилка: Індекс виходить за межі." << endl;
             exit(1);
         }
         return data[index];
     }
 };
 
-// Тестирование класса tvector
-int main() 
+// Тестування класу tvector
+int main()
 {
     setlocale(LC_ALL, "");
 
@@ -190,53 +188,53 @@ int main()
     tv.push_back(8);
     tv.push_back(1);
 
-    cout << "Массив после добавления элементов (используя итератор) : ";
+    cout << "Масив після додавання елементів (використовуючи ітератор): ";
     for (auto itr = tv.begin(); itr != tv.end(); ++itr) {
         cout << *itr << " ";
     }
     cout << endl;
 
-    cout << "Массив после добавления элементов: ";
+    cout << "Масив після додавання елементів: ";
     for (size_t i = 0; i < tv.get_size(); ++i) {
         cout << tv[i] << " ";
     }
     cout << endl;
 
     tv.sort();
-    cout << "Массив после сортировки: ";
+    cout << "Масив після сортування: ";
     for (size_t i = 0; i < tv.get_size(); ++i) {
         cout << tv[i] << " ";
     }
     cout << endl;
 
     tv.reverse();
-    cout << "Массив после реверса: ";
+    cout << "Масив після реверсу: ";
     for (size_t i = 0; i < tv.get_size(); ++i) {
         cout << tv[i] << " ";
     }
     cout << endl;
 
-    // Копирование в обычный массив
+    // Копіювання у звичайний масив
     int* regular_array = new int[tv.get_size()];
     tv.copy_to_array(regular_array);
 
-    cout << "Обычный массив после копирования: ";
+    cout << "Звичайний масив після копіювання: ";
     for (size_t i = 0; i < tv.get_size(); ++i) {
         cout << regular_array[i] << " ";
     }
     cout << endl;
 
-    // Копирование из обычного массива
+    // Копіювання зі звичайного масиву
     int new_array[] = { 100, 200, 300, 400 };
     tv.copy_from_array(new_array, 4);
 
-    cout << "Массив tvector после копирования из обычного массива: ";
+    cout << "Масив tvector після копіювання зі звичайного масиву: ";
     for (size_t i = 0; i < tv.get_size(); ++i) {
         cout << tv[i] << " ";
     }
     cout << endl;
 
-    delete[] regular_array; // Освобождаем память
+    delete[] regular_array; // Звільняємо пам'ять
 
     return 0;
 }
